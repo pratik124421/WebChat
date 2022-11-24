@@ -1,0 +1,124 @@
+
+<div class="main">
+<header>
+    <h1 class="nice-font" id="h" >Trek</h1>
+</header>
+
+<main class="nice-font">
+
+<ng-container *ngFor="let con of conversation">
+
+    <ng-container *ngIf="con.author ==  msgAuthor.Bot">
+        <div  class="row answerblock">
+    
+        <ng-container  *ngIf="con.msgType == 'Text'">
+
+                <div class="chat answer shadow">
+                    <div class="body">{{con.msgText}}</div>
+                   
+                </div>
+                <ng-container *ngTemplateOutlet="timestamp; context: {timestamp: con.timestamp}"></ng-container>
+ 
+           
+
+            <!-- <div class="bot-content">
+                <div class="body">{{con.msgText}}</div>
+                <div class="time-stamp">{{con.timestamp}}</div>    
+            </div> -->
+            <!-- <p>{{con._isAckPending}}</p> -->
+        </ng-container>
+    
+        <ng-container  *ngIf="con.msgType == 'ChoicePrompt'">
+            <div class="chat answer shadow">
+                <p>{{con.msgBody.text}}</p>
+                <!-- <p>{{con._isAckPending}}</p> -->
+                <button *ngFor="let button of con.msgBody.choices" [disabled]="con.isOptionsDisable" (click)="sendMsgToBot(button)">
+                    {{button}}
+                </button>
+            </div>
+            <ng-container *ngTemplateOutlet="timestamp; context: {timestamp: con.timestamp}"></ng-container>
+
+        </ng-container>
+    
+        <ng-container  *ngIf="con.msgType == 'ShowCategory'">
+                <div class="chat answer shadow">
+                    <p>{{con.msgBody.text}}</p>
+                <!-- <p>{{con._isAckPending}}</p> -->
+                <button *ngFor="let button of con.msgBody.choices; let idx=index" [disabled]="con.isOptionsDisable" (click)="sendCustomAdaptiveChoiceResponse(con.msgBody,idx)">
+                    {{button.title}}
+                </button>
+                </div>
+                <ng-container *ngTemplateOutlet="timestamp; context: {timestamp: con.timestamp}"></ng-container>
+
+        </ng-container>
+        
+    </div>
+    </ng-container>
+
+   
+
+
+
+    
+
+    <ng-container *ngIf="con.author ==  msgAuthor.User">
+
+        <div  class="row questionblock">
+
+        <ng-container  *ngIf="con.msgType == 'Text'">
+            <div class="acknowledge">
+                <label class="status" [ngClass]="{'delivered':con.isDelivered}">Delivered</label>
+                <!-- <label class="status" [ngClass]="{'sending':con.isPending}">Sending</label> -->
+
+                <!-- <label class="status">Delivered</label>
+                <label class="status">Sending</label> -->
+            </div> 
+            
+            <div class="chat question shadow">
+                <div class="body">{{con.msgText}}</div>
+            </div>
+            <ng-container *ngTemplateOutlet="timestamp; context: {timestamp: con.timestamp}"></ng-container>
+            <!-- <p>{{con._isAckPending}}</p> -->
+        </ng-container>
+
+        </div>
+
+    </ng-container>
+
+    
+
+</ng-container>
+
+
+
+</main>
+
+
+
+<ng-template #timestamp let-time="timestamp">
+    <div class="time-stamp">
+        <label>{{time}}</label>
+    </div> 
+</ng-template>
+
+<div class="last">
+
+<div id="typingEventBox" *ngIf="ShouldShowTypingEvent">
+    <label>
+        <span>* </span>
+        <span>* </span>
+        <span>* </span>
+    </label>
+</div>
+
+<footer>
+    <div id="command">
+        <input id="textarea" placeholder="Input command here " type="text" [(ngModel)]="BotMsg" (keyup.enter)="onSubmit()" (keydown.enter)="$event.preventDefault()"/>
+        <button class="shadow nice-font submit" (click)="onSubmit()">></button>
+    </div>
+</footer>
+
+</div>
+
+
+</div>
